@@ -1,0 +1,732 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 8,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "b90e3fbe-3f3c-4126-9298-edbbf9aa7de5"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#32ac2df7",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 7,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mGZE-Tynk"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "slurm_submit_job_count",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "总提交任务数",
+      "type": "stat"
+    },
+    {
+      "datasource": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#32ac2df7",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 7,
+        "y": 0
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mGZE-Tynk"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "count(slurm_squeue{JOBID!=\"JOBID\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "队列中任务数",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "af5514f6-9a93-425f-838a-989421644ef2"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 15,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 9,
+      "options": {
+        "config": "",
+        "data": "",
+        "layout": {
+          "bargap": 0.1,
+          "font": {
+            "color": "darkgrey"
+          },
+          "margin": {
+            "b": 40,
+            "r": 10,
+            "t": 10
+          },
+          "paper_bgcolor": "rgba(0,0,0,0)",
+          "plot_bgcolor": "rgba(0,0,0,0)",
+          "xaxis": {
+            "autorange": true,
+            "range": [
+              -1,
+              6
+            ],
+            "title": {
+              "text": "作业运行时间/h"
+            }
+          },
+          "yaxis": {
+            "autorange": false,
+            "range": [
+              43000,
+              45400
+            ],
+            "title": {
+              "text": "作业数"
+            }
+          }
+        },
+        "onclick": "console.log(data)\nwindow.updateVariables({query:{'var-project':'test'}, partial: true})",
+        "script": "//console.log(data);\nconst fields = data.series[0].fields;\nconst renderData = [];\nconst total = data.series[0].length;\n\nfor (let i = 0; i < total; i ++) {\n  const tmp = {};\n  for (let key = 0; key < fields.length; key ++) {\n    tmp[fields[key].name] = fields[key].values[i];\n  };\n  renderData.push(tmp)\n};\n\n//console.log(renderData);\n\nconst rows = renderData;\n\n  function unpack(rows, key) {\n  return rows.map(function(row) { return row[key]; });\n  }\n\nvar min = Number(renderData[0]['freq'])\nvar ary = [4000600, 4002100]\n\nvar data = [{\n  type: 'histogram',\n  cumulative: {enabled: true},\n  histfunc: \"sum\",\n  x: unpack(rows, 'duration'),\n  y: unpack(rows, 'freq'),\n  opacity: 0.9,\n  marker: {\n    color: ['rgb(200,200,0)', 'rgb(178,201,0)',  'rgb(155,201,0)', 'rgb(128,201,0)', 'rgb(96,201,0)', 'rgb(53,195,76)', 'rgb(0,187,111)', 'rgb(0,177,135)', 'rgb(0,155,171)', 'rgb(0,128,218)','rgb(0,93,239)','rgb(0,0,200)', 'rgb(68,0,178)', 'rgb(88,0,157)', 'rgb(98,0,137)', 'rgb(118,0,117)']\n  },\n  autobinx: true,\n}]\n\n\n\nreturn {data,layout:{}};"
+      },
+      "targets": [
+        {
+          "columns": [],
+          "csv_options": {
+            "delimiter": " ",
+            "skip_empty_lines": true,
+            "skip_lines_with_error": true
+          },
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "af5514f6-9a93-425f-838a-989421644ef2"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "csv",
+          "url": "http://192.168.1.42:9997/draw_histogram.csv",
+          "url_options": {
+            "data": "",
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "过去一周作业运行时间（累计）直方图",
+      "type": "ae3e-plotly-panel"
+    },
+    {
+      "datasource": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "用户"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "作业号"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "作业名"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "节点数量"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "队列"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mGZE-Tynk"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "slurm_squeue{ST=\"PD\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "正在排队的任务",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "JOBID",
+                "NAME",
+                "NODELIST",
+                "NODES",
+                "PARTITION",
+                "USER"
+              ]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "JOBID": 1,
+              "NAME": 2,
+              "NODELIST": 5,
+              "NODES": 3,
+              "PARTITION": 4,
+              "USER": 0
+            },
+            "renameByName": {
+              "JOBID": "作业号",
+              "NAME": "作业名",
+              "NODELIST": "排队原因",
+              "NODES": "节点数量",
+              "PARTITION": "队列",
+              "ST": "作业状态",
+              "TIME": "运行时间",
+              "USER": "用户"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "af5514f6-9a93-425f-838a-989421644ef2"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 15,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 8,
+      "options": {
+        "config": "",
+        "layout": {
+          "autosize": true,
+          "font": {
+            "color": "darkgrey"
+          },
+          "margin": {
+            "b": 40,
+            "t": 10
+          },
+          "paper_bgcolor": "rgba(0,0,0,0)",
+          "plot_bgcolor": "rgba(0,0,0,0)",
+          "xaxis": {
+            "autorange": true,
+            "gridcolor": "#333",
+            "gridwidth": 1,
+            "range": [
+              -1,
+              6
+            ],
+            "title": {
+              "text": "总计算时间/h"
+            },
+            "zeroline": true,
+            "zerolinecolor": "#555",
+            "zerolinewidth": 1
+          },
+          "yaxis": {
+            "autorange": true,
+            "gridcolor": "#333",
+            "range": [
+              -1,
+              4
+            ],
+            "title": {
+              "text": "作业等待时间中值/s"
+            },
+            "zeroline": true,
+            "zerolinecolor": "#555",
+            "zerolinewidth": 1
+          }
+        },
+        "onclick": "console.log(data)\nwindow.updateVariables({query:{'var-project':'test'}, partial: true})",
+        "script": "//console.log(data.series[0].fields[0].values.buffer[0])\nconst fields = data.series[0].fields;\nconst renderData = [];\nconst total = data.series[0].length;\n\nfor (let i = 0; i < total; i ++) {\n  const tmp = {};\n  for (let key = 0; key < fields.length; key ++) {\n    tmp[fields[key].name] = fields[key].values[i];\n  };\n  renderData.push(tmp)\n};\n\n//console.log(renderData);\n\nconst rows = renderData;\n\n  function unpack(rows, key) {\n  return rows.map(function(row) { return row[key]; });\n  }\n\nvar desired_maximum_marker_size = 150;\nvar size = unpack(rows, 'job_counts');\n//console.log(size)\nvar log = unpack(rows, 'log');\nvar groups = unpack(rows, 'group');\nvar trace = {\n  x: unpack(rows, 'run_time'),\n  y: unpack(rows, 'median'),\n  customdata: unpack(rows, 'job_counts'),\n  type: 'scatter',\n  textposition: 'middle center',\n  hovertext: unpack(rows, 'group'),\n  hovertemplate: \"<extra><br>%{hovertext}<br>(%{x:.0f}, %{y})<br>总任务数: %{customdata}<br></extra>\",\n  mode: 'markers+text',\n  marker: {\n    color: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300],\n    colorscale: 'Rainbow',\n    opacity: 0.9,\n    line: {\n      width: 0\n    },\n    size: log,\n    sizeref: 0.005,\n    sizemode: 'area'\n  },\n  textfont: {\n    color: 'white',\n  }\n};\n\nreturn {data:[trace],layout:{}};"
+      },
+      "targets": [
+        {
+          "columns": [],
+          "csv_options": {
+            "skip_empty_lines": true,
+            "skip_lines_with_error": true
+          },
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "af5514f6-9a93-425f-838a-989421644ef2"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "simple",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "csv",
+          "uql": "parse-csv",
+          "url": "http://192.168.1.42:9998/bubble.csv",
+          "url_options": {
+            "data": "",
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "过去一周各组作业统计气泡图",
+      "transformations": [],
+      "type": "ae3e-plotly-panel"
+    },
+    {
+      "datasource": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "用户"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "作业号"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "作业名"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "节点数量"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "队列"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "运行时间"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "用户"
+          }
+        ]
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mGZE-Tynk"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "slurm_squeue{ST=\"R\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "正在运行的任务",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "JOBID",
+                "NAME",
+                "NODELIST",
+                "NODES",
+                "PARTITION",
+                "USER",
+                "TIME"
+              ]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "JOBID": 1,
+              "NAME": 2,
+              "NODELIST": 5,
+              "NODES": 3,
+              "PARTITION": 4,
+              "USER": 0
+            },
+            "renameByName": {
+              "JOBID": "作业号",
+              "NAME": "作业名",
+              "NODELIST": "运行节点",
+              "NODES": "节点数量",
+              "PARTITION": "队列",
+              "ST": "作业状态",
+              "TIME": "运行时间",
+              "USER": "用户"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "",
+  "title": "SLURM",
+  "uid": "VFUgzxZ4k",
+  "version": 15,
+  "weekStart": ""
+}

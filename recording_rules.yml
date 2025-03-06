@@ -1,0 +1,27 @@
+groups:
+  - name: cpu-recording
+    rules: 
+      - record: average_cpu_usage 
+        expr: avg(1 - avg(rate(node_cpu_seconds_total{mode="idle",instance=~".*:9200",instance!="master-2:9200",instance!="master-3:9200"}[2m])) by (instance)) * 100
+      - record: average_memory_usage
+        expr: (sum(node_memory_MemTotal_bytes{instance=~".+:9200",instance!="master-2:9200",instance!="master-3:9200"} - node_memory_MemAvailable_bytes{instance=~".+:9200",instance!="master-2:9200",instance!="master-3:9200"}) / sum(node_memory_MemTotal_bytes{instance=~".+:9200",instance!="master-2:9200",instance!="master-3:9200"})) * 100
+      - record: average_cpu_load5
+        expr: avg(sum(node_load5{instance=~".*:9200",instance!="master-3:9200",instance!="master-2:9200"})by(instance) / count(node_cpu_seconds_total{mode="system",instance=~".*:9200",instance!="master-3:9200",instance!="master-2:9200"})by(instance) * 100)
+
+  - name: gpu-recording
+    rules:
+      - record: average_gpu_usage
+        expr: sum(nvidia_gpu_duty_cycle) / sum(nvidia_gpu_num_devices)
+      - record: average_gpu_memory_usage
+        expr: sum(nvidia_gpu_memory_used_bytes) / sum(nvidia_gpu_memory_total_bytes) * 100
+
+  - name: ib-recording
+    rules:
+      - record: summary_ib_duqu
+        expr: sum(rate(node_infiniband_port_data_received_bytes_total{device!~"hfi.+"}[2m])*8)
+      - record: summary_ib_xieru
+        expr: sum(rate(node_infiniband_port_data_transmitted_bytes_total{device!~"hfi.+"}[2m])*8)
+      - record: summary_gpu_ib_duqu
+        expr: sum(rate(node_infiniband_port_data_received_bytes_total{instance=~".+:9100",instance!="master-1:9100",device!~"hfi.+"}[2m])*8)
+      - record: summary_gpu_ib_xieru
+        expr: sum(rate(node_infiniband_port_data_transmitted_bytes_total{instance=~".+:9100",instance!="master-1:9100",device!~"hfi.+"}[2m])*8)
